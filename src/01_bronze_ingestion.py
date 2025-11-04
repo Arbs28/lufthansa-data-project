@@ -19,10 +19,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "..")))
 from config.spark_config import create_spark
 
 if "__file__" in globals():
-    # Running from a script (e.g., src/01_bronze_ingestion.py)
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 else:
-    # Running from a notebook inside /notebooks
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
 
     
@@ -64,7 +62,7 @@ def main():
     spark = create_spark("Bronze Ingestion")
     data_ingestion(spark)
     spark.stop()
-    print("Ingestion complete ✅")
+    print("Ingestion complete")
 
 if __name__ == "__main__":
     main()
