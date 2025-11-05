@@ -48,14 +48,12 @@ def clean_dataframe(df: DataFrame, subset_cols: list[str]) -> DataFrame:
 
 def add_derived_columns(orders: DataFrame, order_items: DataFrame, payments: DataFrame):
     """Add calculated columns: total_price, profit_margin, delivery_time_days, payment_count."""
-    # Enrich order_items
     order_items = (
         order_items
         .withColumn("total_price", F.col("price") + F.col("freight_value"))
         .withColumn("profit_margin", F.col("price") - F.col("freight_value"))
     )
 
-    # Correct delivery_time_days calculation
     orders = (
         orders
         .withColumn(
@@ -69,7 +67,6 @@ def add_derived_columns(orders: DataFrame, order_items: DataFrame, payments: Dat
         .filter(F.col("delivery_time_days") > 0)          # remove invalid/zero
     )
 
-    # Aggregate payment installments per order
     payments_agg = (
         payments
         .groupBy("order_id")
@@ -132,9 +129,6 @@ def main():
     write_delta(silver_orders, "orders_enriched")
     write_delta(silver_order_items, "order_items_enriched")
 
-    # Validate
-    print("\nSample delivery times:")
-    silver_orders.select("delivery_time_days").summary().show()
 
     spark.stop()
     print("\nSilver transformation completed successfully.")

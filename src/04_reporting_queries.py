@@ -42,16 +42,6 @@ spark.sql("""
     LIMIT 10
 """).show(truncate=False)
 
-print("Average Delivery Time per Seller (Summary):")
-spark.sql("""
-    SELECT 
-        ROUND(MIN(avg_delivery_time), 2) AS min_delivery_time,
-        ROUND(PERCENTILE(avg_delivery_time, 0.5), 2) AS median_delivery_time,
-        ROUND(AVG(avg_delivery_time), 2) AS mean_delivery_time,
-        ROUND(MAX(avg_delivery_time), 2) AS max_delivery_time
-    FROM kpi_avg_delivery_per_seller
-""").show(truncate=False)
-
 print("Sample of Average Delivery Time per Seller:")
 spark.sql("""
     SELECT seller_id, avg_delivery_time
@@ -71,5 +61,3 @@ spark.stop()
 print("Gold SQL reporting completed successfully.")
 
 
-if __name__ == "__main__":
-    main()

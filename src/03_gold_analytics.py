@@ -48,7 +48,7 @@ def cumulative_sales_per_customer(orders, order_items):
     )
 
     result.write.format("delta").mode("overwrite").save(f"{gold_path}cumulative_sales_per_customer")
-    print("✅ Created cumulative_sales_per_customer table.")
+    print(" Created cumulative_sales_per_customer table.")
     return result
 
 
@@ -72,7 +72,7 @@ def rolling_avg_delivery_per_category(orders, order_items):
     )
 
     result.write.format("delta").mode("overwrite").save(f"{gold_path}rolling_avg_delivery_per_category")
-    print("✅ Created rolling_avg_delivery_per_category table.")
+    print(" Created rolling_avg_delivery_per_category table.")
     return result
 
 
@@ -111,7 +111,6 @@ def kpi_summary_tables(orders, order_items):
     delivery_per_seller.write.format("delta").mode("overwrite").save(f"{gold_path}kpi_avg_delivery_per_seller")
     print(" Created kpi_avg_delivery_per_seller table.")
 
-    # --- Orders per Customer State ---
     orders_per_state = (
         orders
         .groupBy("customer_state")
@@ -131,15 +130,8 @@ def main():
     orders = spark.read.format("delta").load(f"{silver_path}orders_enriched")
     order_items = spark.read.format("delta").load(f"{silver_path}order_items_enriched")
 
-    # --- Debugging Section ---
-    print("\nOrders sample:")
-    orders.select("order_id", "delivery_time_days").show(5, truncate=False)
 
-    print("\nOrder items sample:")
-    order_items.select("order_id", "seller_id", "product_category_name").show(5, truncate=False)
 
-    print("\nDelivery time stats (orders_enriched):")
-    orders.select("delivery_time_days").summary().show()
 
     print("\nMean delivery time after joining sellers:")
     joined = (
